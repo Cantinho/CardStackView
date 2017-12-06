@@ -13,6 +13,7 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
 
@@ -94,6 +95,7 @@ public class CardStackView extends FrameLayout {
         setSwipeThreshold(array.getFloat(R.styleable.CardStackView_swipeThreshold, option.swipeThreshold));
         setTranslationDiff(array.getFloat(R.styleable.CardStackView_translationDiff, option.translationDiff));
         setScaleDiff(array.getFloat(R.styleable.CardStackView_scaleDiff, option.scaleDiff));
+        setRotationDiff(array.getFloat(R.styleable.CardStackView_rotationDiff, option.rotationDiff));
         setStackFrom(StackFrom.values()[array.getInt(R.styleable.CardStackView_stackFrom, option.stackFrom.ordinal())]);
         setElevationEnabled(array.getBoolean(R.styleable.CardStackView_elevationEnabled, option.isElevationEnabled));
         setSwipeEnabled(array.getBoolean(R.styleable.CardStackView_swipeEnabled, option.isSwipeEnabled));
@@ -103,6 +105,15 @@ public class CardStackView extends FrameLayout {
         setBottomOverlay(array.getResourceId(R.styleable.CardStackView_bottomOverlay, 0));
         setTopOverlay(array.getResourceId(R.styleable.CardStackView_topOverlay, 0));
         array.recycle();
+
+        // Need to update cards again after view has been laid out so the rotation pivot can
+        // be set from height.
+        getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                initializeCardStackPosition();
+            }
+        });
     }
 
     @Override
@@ -223,6 +234,18 @@ public class CardStackView extends FrameLayout {
             float percent = currentScale + (nextScale - currentScale) * Math.abs(percentX);
             ViewCompat.setScaleX(view, percent);
             ViewCompat.setScaleY(view, percent);
+
+            if(option.rotationDiff != 0) {
+                measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
+
+                int rotation = -1;
+                if (i % 2 == 0) {
+                    rotation = 1;
+                }
+                view.setPivotX(0);
+                view.setPivotY(getHeight());
+                view.setRotation(option.rotationDiff * rotation);
+            }
 
             float currentTranslationY = i * Util.toPx(getContext(), option.translationDiff);
             if (option.stackFrom == StackFrom.Top) {
@@ -400,6 +423,13 @@ public class CardStackView extends FrameLayout {
 
     public void setScaleDiff(float scaleDiff) {
         option.scaleDiff = scaleDiff;
+        if (adapter != null) {
+            initialize(false);
+        }
+    }
+
+    public void setRotationDiff(float rotationDiff) {
+        option.rotationDiff = rotationDiff;
         if (adapter != null) {
             initialize(false);
         }
