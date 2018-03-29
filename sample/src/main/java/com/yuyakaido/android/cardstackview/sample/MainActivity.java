@@ -100,6 +100,7 @@ public class MainActivity extends AppCompatActivity {
         progressBar = (ProgressBar) findViewById(R.id.activity_main_progress_bar);
 
         cardStackView = (CardStackView) findViewById(R.id.activity_main_card_stack_view);
+        cardStackView.setCardContainerViewClass(MyCardContainerView.class);
         cardStackView.setCardEventListener(new CardStackView.CardEventListener() {
             @Override
             public void onCardDragging(float percentX, float percentY) {
@@ -229,7 +230,7 @@ public class MainActivity extends AppCompatActivity {
         AnimatorSet overlayAnimationSet = new AnimatorSet();
         overlayAnimationSet.playTogether(overlayAnimator);
 
-        cardStackView.swipe(SwipeDirection.Left, cardAnimationSet, overlayAnimationSet);
+        cardStackView.swipe(SwipeDirection.LEFT, cardAnimationSet, overlayAnimationSet);
     }
 
     public void swipeRight() {
@@ -260,7 +261,7 @@ public class MainActivity extends AppCompatActivity {
         AnimatorSet overlayAnimationSet = new AnimatorSet();
         overlayAnimationSet.playTogether(overlayAnimator);
 
-        cardStackView.swipe(SwipeDirection.Right, cardAnimationSet, overlayAnimationSet);
+        cardStackView.swipe(SwipeDirection.RIGHT, cardAnimationSet, overlayAnimationSet);
     }
 
     private void reverse() {
