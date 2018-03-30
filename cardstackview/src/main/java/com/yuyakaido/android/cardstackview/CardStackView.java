@@ -27,11 +27,18 @@ import java.util.List;
 public class CardStackView extends FrameLayout {
 
     public interface CardEventListener {
+        int QUADRANT_FIRST = 1;
+        int QUADRANT_SECOND = 2;
+        int QUADRANT_THIRD = 3;
+        int QUADRANT_FOURTH = 4;
+
         void onCardDragging(float percentX, float percentY);
         void onCardSwiped(SwipeDirection direction);
         void onCardReversed();
         void onCardMovedToOrigin();
         void onCardClicked(int index);
+        void onSingleClicked(final int index, final int quadrant);
+        void onDoubleClicked(int index, final int quadrant);
     }
 
     private CardStackOption option = new CardStackOption();
@@ -56,11 +63,11 @@ public class CardStackView extends FrameLayout {
     };
     private CardContainerView.ContainerEventListener containerEventListener = new CardContainerView.ContainerEventListener() {
         @Override
-        public void onContainerDragging(float percentX, float percentY) {
+        public void onContainerDragging(final float percentX, final float percentY) {
             update(percentX, percentY);
         }
         @Override
-        public void onContainerSwiped(Point point, SwipeDirection direction) {
+        public void onContainerSwiped(final Point point, final SwipeDirection direction) {
             swipe(point, direction);
         }
         @Override
@@ -76,9 +83,24 @@ public class CardStackView extends FrameLayout {
                 cardEventListener.onCardClicked(state.topIndex);
             }
         }
+
+        @Override
+        public void onContainerSingleClicked(final int quadrant) {
+            if (cardEventListener != null) {
+                cardEventListener.onCardClicked(state.topIndex);
+                cardEventListener.onSingleClicked(state.topIndex, quadrant);
+            }
+        }
+
+        @Override
+        public void onContainerDoubleClicked(final int quadrant) {
+            if (cardEventListener != null) {
+                cardEventListener.onDoubleClicked(state.topIndex, quadrant);
+            }
+        }
     };
 
-    public CardStackView(Context context) {
+    public CardStackView(final Context context) {
         this(context, null);
     }
 
