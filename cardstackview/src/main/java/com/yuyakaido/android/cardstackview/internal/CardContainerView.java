@@ -117,7 +117,7 @@ public class CardContainerView extends FrameLayout {
     }
 
     @Override
-    public boolean onTouchEvent(MotionEvent event) {
+    public boolean onTouchEvent(final MotionEvent event) {
         return handleTouchEvent(event);
     }
 

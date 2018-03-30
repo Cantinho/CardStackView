@@ -131,6 +131,16 @@ public class MainActivity extends AppCompatActivity {
             public void onCardClicked(int index) {
                 Log.d("CardStackView", "onCardClicked: " + index);
             }
+
+            @Override
+            public void onCardSingleClicked(int quadrant, int index) {
+                Log.d("CardStackView", "onCardSingleClicked: " + index + "quadrant:" + quadrant);
+            }
+
+            @Override
+            public void onCardDoubleClicked(int quadrant, int index) {
+                Log.d("CardStackView", "onCardDoubleClicked: " + index + "quadrant:" + quadrant);
+            }
         });
     }
 
