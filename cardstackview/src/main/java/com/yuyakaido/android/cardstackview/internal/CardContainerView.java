@@ -17,6 +17,11 @@ import android.widget.FrameLayout;
 
 import com.yuyakaido.android.cardstackview.SwipeDirection;
 
+import static com.yuyakaido.android.cardstackview.internal.CardContainerView.ContainerEventListener.QUADRANT_FIRST;
+import static com.yuyakaido.android.cardstackview.internal.CardContainerView.ContainerEventListener.QUADRANT_FOURTH;
+import static com.yuyakaido.android.cardstackview.internal.CardContainerView.ContainerEventListener.QUADRANT_SECOND;
+import static com.yuyakaido.android.cardstackview.internal.CardContainerView.ContainerEventListener.QUADRANT_THIRD;
+
 public class CardContainerView extends FrameLayout {
 
     private CardStackOption option;
@@ -36,18 +41,56 @@ public class CardContainerView extends FrameLayout {
     private View topOverlayView = null;
 
     private ContainerEventListener containerEventListener = null;
+
     private GestureDetector.SimpleOnGestureListener gestureListener = new GestureDetector.SimpleOnGestureListener() {
         @Override
-        public boolean onSingleTapUp(MotionEvent e) {
+        public boolean onSingleTapUp(final MotionEvent motionEvent) {
             if (containerEventListener != null) {
                 containerEventListener.onContainerClicked();
+                containerEventListener.onCardSingleClicked(getQuadrant(motionEvent));
+            }
+            return true;
+        }
+
+        @Override
+        public boolean onDoubleTap(final MotionEvent motionEvent) {
+            if (containerEventListener != null) {
+                containerEventListener.onCardDoubleClicked(getQuadrant(motionEvent));
             }
             return true;
         }
     };
+
+    private int getQuadrant(final MotionEvent motionEvent) {
+        float relativeX = -(getWidth() / 2 - motionEvent.getX());
+        float relativeY = -(getHeight() / 2 - motionEvent.getY());
+        if(relativeX > 0) {
+            if(relativeY < 0) {
+                // first quadrant
+                return QUADRANT_FIRST;
+            } else {
+                // second quadrant
+                return QUADRANT_SECOND;
+            }
+        } else {
+            if(relativeY > 0) {
+                // third quadrant
+                return QUADRANT_THIRD;
+            } else {
+                // fourth quadrant
+                return QUADRANT_FOURTH;
+            }
+        }
+    }
+
     private GestureDetector gestureDetector = new GestureDetector(getContext(), gestureListener);
 
     public interface ContainerEventListener {
+        int QUADRANT_FIRST = 1;
+        int QUADRANT_SECOND = 2;
+        int QUADRANT_THIRD = 3;
+        int QUADRANT_FOURTH = 4;
+
         void onContainerDragging(float percentX, float percentY);
 
         void onContainerSwiped(Point point, SwipeDirection direction);
@@ -55,6 +98,10 @@ public class CardContainerView extends FrameLayout {
         void onContainerMovedToOrigin();
 
         void onContainerClicked();
+
+        void onCardSingleClicked(final int quadrant);
+
+        void onCardDoubleClicked(final int quadrant);
     }
 
     public CardContainerView(Context context) {

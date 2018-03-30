@@ -31,15 +31,19 @@ import java.util.List;
 public class CardStackView extends FrameLayout {
 
     public interface CardEventListener {
-        void onCardDragging(float percentX, float percentY);
+        void onCardDragging(final float percentX, final float percentY);
 
-        void onCardSwiped(SwipeDirection direction);
+        void onCardSwiped(final SwipeDirection direction);
 
         void onCardReversed();
 
         void onCardMovedToOrigin();
 
-        void onCardClicked(int index);
+        void onCardClicked(final int index);
+
+        void onCardSingleClicked(final int quadrant, final int index);
+
+        void onCardDoubleClicked(final int quadrant, final int index);
     }
 
     private CardStackOption option = new CardStackOption();
@@ -84,6 +88,20 @@ public class CardStackView extends FrameLayout {
         public void onContainerClicked() {
             if (cardEventListener != null) {
                 cardEventListener.onCardClicked(state.topIndex);
+            }
+        }
+
+        @Override
+        public void onCardSingleClicked(int quadrant) {
+            if(cardEventListener != null) {
+                cardEventListener.onCardSingleClicked(quadrant, state.topIndex);
+            }
+        }
+
+        @Override
+        public void onCardDoubleClicked(int quadrant) {
+            if(cardEventListener != null) {
+                cardEventListener.onCardDoubleClicked(quadrant, state.topIndex);
             }
         }
     };
