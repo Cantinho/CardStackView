@@ -25,20 +25,11 @@ android {
 dependencies {
     compile 'com.android.support:support-v4:25.4.0'
 }
-//
-//publish {
-//    groupId = 'com.yuyakaido.android'
-//    artifactId = 'card-stack-view'
-//    publishVersion = '1.0.0-beta9'
-//    uploadName = 'CardStackView'
-//    website = 'https://github.com/yuyakaido/CardStackView'
-//}
-
 
 publish {
     groupId = 'com.yuyakaido.android'
     artifactId = 'card-stack-view'
-    publishVersion = 'v1.0'
+    publishVersion = '1.0.0-beta9'
     uploadName = 'CardStackView'
-    website = 'https://github.com/Cantinho/CardStackView'
+    website = 'https://github.com/yuyakaido/CardStackView'
 }

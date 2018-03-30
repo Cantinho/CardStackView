@@ -37,8 +37,8 @@ public class CardStackView extends FrameLayout {
         void onCardReversed();
         void onCardMovedToOrigin();
         void onCardClicked(int index);
-        void onSingleClicked(final int index, final int quadrant);
-        void onDoubleClicked(int index, final int quadrant);
+        void onCardSingleClicked(final int index, final int quadrant);
+        void onCardDoubleClicked(int index, final int quadrant);
     }
 
     private CardStackOption option = new CardStackOption();
@@ -88,14 +88,14 @@ public class CardStackView extends FrameLayout {
         public void onContainerSingleClicked(final int quadrant) {
             if (cardEventListener != null) {
                 cardEventListener.onCardClicked(state.topIndex);
-                cardEventListener.onSingleClicked(state.topIndex, quadrant);
+                cardEventListener.onCardSingleClicked(state.topIndex, quadrant);
             }
         }
 
         @Override
         public void onContainerDoubleClicked(final int quadrant) {
             if (cardEventListener != null) {
-                cardEventListener.onDoubleClicked(state.topIndex, quadrant);
+                cardEventListener.onCardDoubleClicked(state.topIndex, quadrant);
             }
         }
     };
